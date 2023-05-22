@@ -109,9 +109,15 @@ new_columns = {
     'status': 'STATUS'
 }
 df_temp = df_temp.rename(columns=new_columns)
-styled_df = df_temp.style.applymap(color_cells)
+#styled_df = df_temp.applymap(color_cells)
 
-st.dataframe(styled_df, height=300, width=2000)
+styled_df = df_temp.style.applymap(color_cells)
+html = styled_df.to_html(escape=False, index=False)
+styled_table = f'<div style="display: flex; justify-content: center; height: 300px; overflow: auto">{html}</div>'
+st.markdown(styled_table, unsafe_allow_html=True)
+
+
+#st.table(styled_df) #, height=300, width=2000
 
 st.title('Opportunity Split')
 
