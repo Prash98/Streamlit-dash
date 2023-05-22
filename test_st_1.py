@@ -11,11 +11,9 @@ df = pd.DataFrame(data)
 # Group the DataFrame by category and calculate the sum
 grouped_df = df.groupby('Category').sum()
 
-# Display the aggregated values directly at the top
+# Display an expander for each category with aggregated value
 for category, value in grouped_df.iterrows():
-    st.write(f"{category}: {value['Value']}")
-
-# Create an expander for the remaining content
-expander = st.expander("More Details")
-with expander:
-    st.dataframe(df)
+    expander = st.expander(f"{category}: Aggregated Value - {value['Value']}")
+    with expander:
+        category_data = df[df['Category'] == category]
+        st.dataframe(category_data)
