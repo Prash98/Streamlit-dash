@@ -67,7 +67,7 @@ try:
     raw_data = raw_data[raw_data['date'] <= selected_date[1]]
     raw_data = raw_data[raw_data['date'] >= selected_date[0]]
 except Exception as e:
-    c2.error('Pick end date')
+    c1.error('Pick end date')
 
 col1, col2, col3, col4, col5, col6 = st.columns(6)
 
@@ -142,6 +142,10 @@ new_columns = {
     'status': 'STATUS'
 }
 df_temp = df_temp.rename(columns=new_columns)
+df_temp['OPPORTUNITY'] = df_temp.apply(lambda x: round(x['OPPORTUNITY']), axis=1)
+df_temp['SELL THROUGH'] = df_temp.apply(lambda x: round(x['SELL THROUGH']), axis=1)
+df_temp['RRP'] = df_temp.apply(lambda x: round(x['RRP']), axis=1)
+df_temp = df_temp[['PRODUCT','STATUS','OPPORTUNITY','SELL THROUGH','SALES QTY','RRP']]
 #styled_df = df_temp.applymap(color_cells)
 
 styled_df = df_temp.style.applymap(color_cells)
