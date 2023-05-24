@@ -4,22 +4,31 @@ from numerize import numerize
 import streamlit as st
 import plotly.express as px
 
+
+
 @st.cache_data
 def load_data(url):
     df = pd.read_csv(url)
     return df
 
-def value_with_image(col,header,value):
+def value_with_image(col,header,value,header_style="",value_style=""):
     with col:
-        st.metric(header,value)
+        st.markdown(f'<div class="my-metric {header_style}">{header}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="my-value {value_style}">{value}</div>', unsafe_allow_html=True)
 
-def value_status(col,header,df,status_col):
+        #st.metric(header, value)
+        #st.metric(label="", value="")
+        #st.metric(header,value, style='my-metric')
+
+def value_status(col,header,df,status_col,header_style="",value_style=""):
         #st.dataframe(df)
         df.groupby(['product']).agg({'status':'count'})
         df = df[df['status'] == status_col]
         value = df.status.count()
         with col:
-            st.metric(header,value)
+            st.markdown(f'<div class="my-metric {header_style}">{header}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="my-value {value_style}">{value}</div>', unsafe_allow_html=True)
+            #st.metric(header,value)
 
     
 def get_total_sales(df):
@@ -108,6 +117,7 @@ def create_donut_graph(df, group_var, sum_var):
 
 def color_cells(value):
     color = 'red' if value == 'SLOW' else 'green' if value == 'FAST' else 'orange' if value == 'MEDIUM' else ""
+    #return f'<span style="color: {color}">{value}</span>'
     return f'color: {color}'
 
 

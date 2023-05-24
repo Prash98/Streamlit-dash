@@ -4,6 +4,11 @@ from helper import *
 import datetime
 import plotly.express as px
 
+import base64
+from PIL import Image
+import io
+
+
 
 st.set_page_config(page_title = "Real-Time DS Dashboard",layout='wide',initial_sidebar_state= 'expanded')
 st.title('CGR Tower')
@@ -13,30 +18,34 @@ with open('style.css') as f:
 data = load_data('dummy_data.csv')
 #st.dataframe(data)
 
-c1,c2 = st.columns([5,1])
-with c1:
-    c = st.columns(5)
+c1= st.columns(1)
+with c1[0]:
+    c = st.columns(6)
     with c[0]:
-        pgs = st.multiselect('Product Group', options=list(data.product_group.unique()))
+        st.markdown(f'<div class=my-header>Product Group</div>', unsafe_allow_html=True)
+        pgs = st.multiselect("", options=list(data.product_group.unique()))
     with c[1]:
-        pts = st.multiselect('Product Type',options=list(data.product_type.unique()))
+        st.markdown(f'<div class=my-header>Product Group</div>', unsafe_allow_html=True)
+        pts = st.multiselect('',options=list(data.product_type.unique()))
     with c[2]:
-        franchises = st.multiselect('Franchise',options=list(data.franchise.unique()))
+        st.markdown(f'<div class=my-header>Product Group</div>', unsafe_allow_html=True)
+        franchises = st.multiselect('',options=list(data.franchise.unique()))
     with c[3]:
-        countries = st.multiselect('Country',options=list(data.country.unique()))
+        st.markdown(f'<div class=my-header>Product Group</div>', unsafe_allow_html=True)
+        countries = st.multiselect('',options=list(data.country.unique()))
     with c[4]:
-        genders = st.multiselect('Gender',options=list(data.gender.unique()))
+        st.markdown(f'<div class=my-header>Product Group</div>', unsafe_allow_html=True)
+        genders = st.multiselect('',options=list(data.gender.unique()))
+    with c[5]:
+        min_date = datetime.date(2022,1,1)
+        max_date = datetime.date.today()
 
-with c2:
-    min_date = datetime.date(2022,1,1)
-    max_date = datetime.date.today()
-
-    data['date'] = pd.to_datetime(data.date, dayfirst=True)
-    data['date'] = data['date'].dt.date
+        data['date'] = pd.to_datetime(data.date, dayfirst=True)
+        data['date'] = data['date'].dt.date
 
 
-
-    selected_date = st.date_input('Select Date range',(min_date,max_date))
+        st.markdown(f'<div class=my-header>Select Date range</div>', unsafe_allow_html=True)
+        selected_date = st.date_input('',(min_date,max_date))
     # st.write(min_date)
     # st.write(max_date)
     # st.write(data['date'][0])
@@ -79,7 +88,31 @@ value_status(col9,'Fast Status',sell_through_status(opp_df(raw_data)),'FAST')
 df_graph = data.groupby('country').agg({'daily_targets':'sum','sales_qty':'sum'}).reset_index()
 
 image_path = "image_1.png"
-st.image(image_path, caption='Breakdown')
+
+###
+
+# Load the image using PIL or any other library
+image = Image.open(image_path)
+
+# Convert the image to bytes
+image_bytes = io.BytesIO()
+image.save(image_bytes, format='PNG')
+image_bytes = image_bytes.getvalue()
+
+# Encode the image bytes as base64
+base64_image = base64.b64encode(image_bytes).decode()
+
+# Display the image centered
+# st.markdown(
+#     f'<div style="display: flex; justify-content: center;"><img src="data:image/png;base64,{base64_image}" width="1000"></div>',
+#     unsafe_allow_html=True
+# )
+
+
+####
+
+
+#st.image(image_path,use_column_width=True, caption='Breakdown')
 
 
 #st.area_chart(df_graph,x='country',y=['daily_targets','sales_qty'])

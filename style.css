@@ -24,10 +24,26 @@ width: fit-content;
 margin: auto;
 }
 
-[data-testid="stMarkdownContainer"] label {
+
+
+[data-testid="stMetricLabel"] {
     width: fit-content;
     margin: auto;
+
     }
+
+[data-testid="stMarkdownContainer"] {
+    width: fit-content;
+    margin: auto;
+
+    }
+
+[data-testid="column"] label {
+    width: fit-content;
+    margin: auto;
+    
+}
+    
 
 [data-testid="stAppViewContainer"] {
 background-color: #EEEEEE;}
@@ -77,4 +93,23 @@ display: none;
 
 div.vg-tooltip-element {
 display: none;
+}
+
+.my-metric {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 18px;
+    margin-bottom: -10px;
+}
+
+.my-value{
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -10px;
+}
+
+.my-header {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 18px;
+    margin-bottom: -30px;
 }
