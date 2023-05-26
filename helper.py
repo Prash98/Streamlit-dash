@@ -74,7 +74,7 @@ def get_opportunity(df):
     
 def opp_df(df):
     try:
-        r1 = df.groupby(['product','product_group','gender','country']).agg(({'sales_qty':'sum','daily_targets':'sum','rrp':'mean'}))
+        r1 = df.groupby(['product','product_group','gender','country','image_url']).agg(({'sales_qty':'sum','daily_targets':'sum','rrp':'mean'}))
         r1['opp'] = ((r1['daily_targets'])- (r1['sales_qty'])) * (r1['rrp']) 
         r1['opp'] = r1.apply(lambda x: 0 if x['opp'] < 0 else x['opp'],axis=1) 
         #st.dataframe(r1)
@@ -93,7 +93,7 @@ def status(df):
     
 def sell_through_status(df):
     try:
-        r2 = df.groupby(['product','product_group','gender','country']).agg({'sales_qty':'sum','daily_targets':'sum','rrp':'mean','opp':'sum'}).reset_index()
+        r2 = df.groupby(['product','product_group','gender','country','image_url']).agg({'sales_qty':'sum','daily_targets':'sum','rrp':'mean','opp':'sum'}).reset_index()
         r2['sell_through'] = (r2['sales_qty']) /(r2['daily_targets'])
         r2['status'] = r2.apply(lambda x: status(x),axis=1)
         return r2
@@ -119,6 +119,9 @@ def color_cells(value):
     color = 'red' if value == 'SLOW' else 'green' if value == 'FAST' else 'orange' if value == 'MEDIUM' else ""
     #return f'<span style="color: {color}">{value}</span>'
     return f'color: {color}'
+
+def image_html(url):
+    return f'<img src="{url}" width="50" height="50">'
 
 
 
