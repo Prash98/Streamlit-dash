@@ -10,7 +10,7 @@ import io
 
 
 
-st.set_page_config(page_title = "Real-Time DS Dashboard",layout='wide',initial_sidebar_state= 'expanded')
+st.set_page_config(page_title = "Real-Time DS Dashboard",layout='wide',page_icon = "?",initial_sidebar_state= 'expanded')
 st.title('CGR Tower')
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html = True)
@@ -53,6 +53,7 @@ with c1[0]:
 raw_data = data.copy()
 
 if len(pgs)!= 0:
+    #st.markdown(f'<div class=image-block></div>', unsafe_allow_html=True)
     raw_data = raw_data[raw_data['product_group'].isin(pgs)]
 if len(pts)!= 0:
     raw_data = raw_data[raw_data['product_type'].isin(pts)]
@@ -145,13 +146,42 @@ df_temp = df_temp.rename(columns=new_columns)
 df_temp['OPPORTUNITY'] = df_temp.apply(lambda x: round(x['OPPORTUNITY']), axis=1)
 df_temp['SELL THROUGH'] = df_temp.apply(lambda x: round(x['SELL THROUGH']), axis=1)
 df_temp['RRP'] = df_temp.apply(lambda x: round(x['RRP']), axis=1)
-df_temp = df_temp[['PRODUCT','STATUS','OPPORTUNITY','SELL THROUGH','SALES QTY','RRP']]
+df_temp = df_temp[['PRODUCT','STATUS','OPPORTUNITY','SELL THROUGH','SALES QTY','RRP','image_url']]
+html_rows = []
+for _, row in df_temp.iterrows():
+    # Create HTML for the row, including the image and other columns
+    html_row = f'<tr><td>{image_html(row["image_url"])}</td><td>{row["PRODUCT"]}</td><td>{row["STATUS"]}</td><td>{row["OPPORTUNITY"]}</td><td>{row["SELL THROUGH"]}</td><td>{row["SALES QTY"]}</td><td>{row["RRP"]}</td></tr>'
+    html_rows.append(html_row)
+
+
+    html_table = f'''
+    <div style="overflow-x: auto; {'max-height: 500px;' if len(data) > 50 else ''}">
+    <table style="width: 100%; table-layout: fixed;">
+        <tr>
+            <th style="width: 22%; max-width: 200px;">Image</th>
+            <th style="width: 33%; max-width: 200px;">Product</th>
+            <th style="width: 33%; max-width: 200px;">Status</th>
+            <th style="width: 33%; max-width: 200px;">Opportunity</th>
+            <th style="width: 33%; max-width: 200px;">Sell Through"</th>
+            <th style="width: 33%; max-width: 200px;">Sales Qty</th>
+            <th style="width: 33%; max-width: 200px;">RRP</th>
+        </tr>
+    {''.join(html_rows)}
+</table>
+</div>
+'''
+
+c1= st.columns(1)
+with c1[0]:
+    st.markdown(html_table, unsafe_allow_html=True)
+
+
 #styled_df = df_temp.applymap(color_cells)
 
-styled_df = df_temp.style.applymap(color_cells)
-html = styled_df.to_html(escape=False, index=False)
-styled_table = f'<div style="display: flex; justify-content: center; height: 300px; overflow: auto">{html}</div>'
-st.markdown(styled_table, unsafe_allow_html=True)
+# styled_df = df_temp.style.applymap(color_cells)
+# html = styled_df.to_html(escape=False, index=False)
+# styled_table = f'<div style="display: flex; justify-content: center; height: 300px; overflow: auto">{html}</div>'
+# st.markdown(styled_table, unsafe_allow_html=True)
 
 
 #st.table(styled_df) #, height=300, width=2000
